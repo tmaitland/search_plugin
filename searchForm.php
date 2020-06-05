@@ -1,54 +1,33 @@
+
 <?php
 /**
  * @package SearchForm_Widget
  * @version 1.05
  */
 /*
-Plugin Name: Google Search Widget
-Description: Widget that allows user to search using the Google API on a WordPress site
+Plugin Name: Google News Search Widget
+Description: Widget that allows user to search using the Google News RSS API on a WordPress site
 Author: Toni-Lee M.
 Author URI: 
 Version: 1.05
 */
 
-/** Ajax calls */
-// $argument = $_POST['Google_Search_Form'];
-// $url = `https://news.google.com/search?q={$argument}&amp;output=rss&hl=en-US&gl=US&ceid=US:en`;
-
-$url = $_GET['url']; 
-$content = file_get_contents($url); 
-header('Access-Control-Allow-Origin: *'); 
-echo $content; 
-
-function GoogleSearch_plugin()
+function GoogleSearch_scripts()
 {   
-   wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'jquery', true);
    wp_register_script('search', plugin_dir_url( __FILE__ ) . 'assets/js/search.js', true);
    wp_enqueue_script('search', plugin_dir_url( __FILE__ ) . 'assets/js/search.js', array('jQuery'), true);
-   wp_enqueue_style('style', plugin_dir_url( __FILE__ ) . 'assets/css/styles.css');
+   wp_enqueue_script('jquery modal','https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js', true);
 }
+add_action( 'wp_footer', 'GoogleSearch_scripts' ); // Write our JS below here
 
-// wp_enqueue_script( 'search', plugin_dir_url( __FILE__ ) . 'assets/js/search.js', array(), true );
-
-add_action( 'wp_footer', 'GoogleSearch_plugin' ); // Write our JS below here
-
-
-// Same handler function...
-
-
-function loadSearch() {
-	global $wpdb; // this is how you get access to the database
-	
-	$whatever = intval( $_POST['whatever'] );
-	
-	$whatever += 10;
-	
-	echo $whatever;
-	
-	wp_die(); // this is required to terminate immediately and return a proper response
+function headScripts(){
+	wp_enqueue_script('axios', plugin_dir_url( __FILE__ ) . 'node_modules/axios/dist/axios.min.js', false);
+	wp_enqueue_script('xml2json', 'https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js', false);
+	wp_enqueue_style('styles', plugin_dir_url( __FILE__ ) . 'assets/css/styles.css', false);
+	wp_enqueue_style('modal', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css', false);
 }
-add_action( 'wp_ajax_loadSearch', 'loadSearch' );
-
+add_action( 'wp_enqueue_scripts', 'headScripts' ); // Write our JS below here
 
 
 // Register and load the widget
@@ -69,10 +48,10 @@ class searchForm_widget extends WP_Widget {
 		'searchForm_widget', 
 			 
 		// Widget name will appear in UI
-		__('Google Search Widget', 'searchForm_widget_domain'), 
+		__('Google News Search Widget', 'searchForm_widget_domain'), 
 			 
 		// Widget description
-		array( 'description' => __( 'Widget that allows user to search using the Google API on a WordPress site', 'searchForm_load_widget' ), ) 
+		array( 'description' => __( 'Widget that allows user to search using the Google News RSS Feed API on a WordPress site', 'searchForm_load_widget' ), ) 
 		);
 	}
 	
@@ -80,32 +59,29 @@ class searchForm_widget extends WP_Widget {
 	 
 	public function widget( $args, $instance ) {
         $title = apply_filters( 'widget_title', $instance['title'] );
-
-        if ( isset( $_SERVER[ 'HTTPS' ]) && $_SERVER[ 'HTTPS' ] === 'on' )  
-             $link = "https";
-        else
-             $link = "http";
-             $link .= "://";
-             $link .= $_SERVER['HTTP_HOST'];
-             $link .= $_SERVER['REQUEST_URI'];
-		
-		
-		// before and after widget arguments are defined by themes
-		echo $args['before_widget'];
-		if ( ! empty( $title ) )
-		echo $args['before_title'] . $title . $args['after_title'];
 		 
 		// This is where you run the code and display the output
 		// echo __( 'Hello, World!', 'tl_widget_domain' );
 		?>
-		<form role="search" class="api-search-form" id="api-search-form" >
-            <label for="api-search-form" /> 
-            <div class="hold-search">
-                <input type="text" id="search-input" name="Google_Search_Form" placeholder="Search..." />
-                <input type="submit" id="search-submit-btn" /> 
-			</div> 
-			<div id="display_info"></div>  
-        </form>
+		<div class="hold-form-and-info" div="hold-form-and-info">
+			<?php 
+				echo $args['before_widget'];
+				if ( ! empty( $title ) )
+				echo $args['before_title'] . $title . $args['after_title'];
+			?>
+			<form role="search" class="api-search-form" id="api-search-form" >
+				<!-- <label for="api-search-form" />  -->
+				<div class="hold-search">
+					<input type="text" id="search-input" name="Google_Search_Form" placeholder="Search..." />
+					<input type="submit" id="search-submit-btn" />
+				</div> 
+			</form>
+		</div>
+		<div class="modal-bg">
+			<div class="modal">
+				<div id="display_info"></div>  
+			</div>
+		</div>
 		<?php 
 		
 

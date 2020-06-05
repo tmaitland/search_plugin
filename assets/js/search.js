@@ -1,48 +1,62 @@
 // Header: 'Access-Control-Allow-Origin: *';
 
+
 jQuery(document).ready(function($) {
-	var api_url = `https://news.google.com/search?q=`;
-	var api_endpoint = `&amp;output=rss&hl=en-US&gl=US&ceid=US:en`;
-	// var displayData = document.querySelector("");
+	
+	let displayInfo = document.querySelector('#display_info');	
+	let modal = document.querySelector('.modal');
+	let modalBG = document.querySelector('.modal-bg');
 
 	$('#api-search-form').submit(function(event){
 		event.preventDefault()
+		
 		var form_data = {
 			'query': $("#search-input").val(),
 		};
+		let x2js = new window.X2JS();
+		displayInfo.innerHTML = '';
+      axios({ method: 'get', url:`https://cors-anywhere.herokuapp.com/news.google.com/news?q=${form_data.query}&output=rss`,
+      headers: { 'Access-Control-Allow-Origin': '*',  'Content-Type': 'application/json' } })
+      .then(function (response) {
+		let titles = [];
+		let links = [];
+		let pubDates = [];
+
+        let xml = response.data;
+        console.log(response.data);
+        let newJSONData = x2js.xml_str2json(xml);
+		console.log(newJSONData.rss.channel.item);
+
 		
-		// $( '#display_info').(function( index, element ) {
+		for(let i = 0; i < 10; i++){
+			titles.push(newJSONData.rss.channel.item[i].title);
+			links.push(newJSONData.rss.channel.item[i].link);
+			pubDates.push(newJSONData.rss.channel.item[i].pubDate);
+			
+			displayInfo.innerHTML += `
+			<p class="rss-titles">
+			  <a href=${links[i]} target="_blank" class="rss-links">${titles[i]}</a>
+			  <small class="rss-dates">${pubDates[i]}</small>
+			</p>
+			`;
 
-			$.ajax({
-				type: "POST",
-				url: api_url + form_data.query + api_endpoint,
-				contentType: 'text/plain',
-				xhrFields: {
-					withCredentials: false
-				},
-				headers: {
-					"Access-Control-Allow-Origin":"*"
-				},
-				success: function(result){
-					console.log(result);
-				},
-				error: function(xhr, status){
-					console.log(xhr, status)
-				}
-			// })
-		  });
-		// // 	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-		// jQuery.post(ajaxurl, data, function(response) {
-		//    alert('Got this from the server: ' + response);
-		// });
+		}
 
-		console.log(form_data.query);
+		$(modal).show();
+		$(modalBG).click( function() {
+			$(modalBG).hide();
+		});
+		
+		
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+
 	})
 
-
-
-	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-	// jQuery.post(ajaxurl, data, function(response) {
-	// 	alert('Got this from the server: ' + response);
-	// });
 });

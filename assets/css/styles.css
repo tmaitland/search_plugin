@@ -1,4 +1,111 @@
+/* holds the widget/plugin content */
+.widget-content {
+    font-size: 2.1rem;
+    height: auto;
+}
+/* holds the form and the ajax content*/
+.hold-form-and-info {
+    /* display: flex; */
+    padding: 4rem 0rem;
+}
+/* holds the search form*/
 .hold-search {
     display: flex;
     justify-content: space-between;
 }
+.api-search-form {
+    margin-bottom: 2rem;
+}
+/* holds the widget/plugin title */
+.widget .widget-title {
+    margin-bottom: 2.5rem;
+}
+/*Holds the AJAX generated information*/
+#display-info {
+    margin-top: 2rem!important;
+    width: 50rem;
+}
+/*Styles for the RSS Feed content*/
+.rss-titles {
+    display: flex;
+    padding: 2rem 1rem;
+    background: white;
+    border-radius: 7px;
+    box-shadow: 0px 2px 8px rgb(0,0,0,0.25);
+    margin: 2rem 0rem;  
+    transition: 0.25s;
+}
+.rss-titles:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 2px 12px rgb(0,0,0,0.25);
+    transition: 0.25s;
+}
+.rss-links {
+    color: black;
+    text-decoration: none;
+    font-size: 1.75rem;
+    flex: 2;
+    text-align: inherit;
+    border-right: 1px double lightgray;
+    padding: 1rem 2rem;
+    transition: 0.1s;
+    /* font-weight: bold; */
+}  
+.rss-links:hover {
+    transition: 0.1s;
+    color: #CD2653;
+}
+.rss-dates{
+  color: gray;
+  flex: 1;
+  margin-left: 1.5rem;
+  text-align: center;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+}
+.modal-bg {
+    overflow-y: scroll;
+    background: rgb(0,0,0,0.5);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+}
+.modal {
+    display: none;
+    position: absolute!important;
+    z-index: 99!important;
+    /* box-sizing: border-box; */
+    max-width: none!important;
+    width: 50%!important;
+    /* background: rgb(0,0,0,0.65)!important; */
+    padding: 15px 30px;
+    text-align: left;
+    top: 0!important;
+    left: 0!important;
+}
+
+/* button, .button, .faux-button, .wp-block-button__link, .wp-block-file .wp-block-file__button, input[type="button"], input[type="reset"], input[type="submit"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: #cd2653;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.0333em;
+    line-height: 1.25;
+    margin: 0;
+    opacity: 1;
+    padding: 1.1em 1.44em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.15s linear;
+} */
