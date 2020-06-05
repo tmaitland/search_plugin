@@ -39,6 +39,8 @@ function searchForm_load_widget() {
 }
 add_action( 'widgets_init', 'searchForm_load_widget' );
  
+add_shortcode( 'google_rss_news', 'widget' );
+
 class searchForm_widget extends WP_Widget {
 	// class constructor
 	
@@ -116,12 +118,6 @@ class searchForm_widget extends WP_Widget {
 	}
 }
 
-function register_searchFormShortcode(){
-	add_shortcode('google_rss_news', 'searchForm_widget');
- }
 
- add_action( 'init', 'register_searchFormShortcode');
-
- add_filter('widget_text', 'do_shortcode');
 
 ?>

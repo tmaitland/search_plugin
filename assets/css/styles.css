@@ -43,7 +43,7 @@
 .rss-links {
     color: black;
     text-decoration: none;
-    font-size: 1.75rem;
+    font-size: 1rem;
     flex: 2;
     text-align: inherit;
     border-right: 1px double lightgray;
@@ -88,7 +88,7 @@
     z-index: 99!important;
     /* box-sizing: border-box; */
     max-width: none!important;
-    width: 67rem!important;
+    width: 65%!important;
     border-radius: 5px;
     /* background: rgb(0,0,0,0.65)!important; */
     padding: 15px 30px;
