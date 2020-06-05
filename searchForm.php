@@ -12,18 +12,21 @@ Author URI:
 Version: 1.05
 */
 
+//Add Scripts to the footer
 function GoogleSearch_scripts()
 {   
-	wp_enqueue_script( 'jquery', true);
+   wp_enqueue_script( 'jquery', true);
    wp_register_script('search', plugin_dir_url( __FILE__ ) . 'assets/js/search.js', true);
    wp_enqueue_script('search', plugin_dir_url( __FILE__ ) . 'assets/js/search.js', array('jQuery'), true);
    wp_enqueue_script('jquery modal','https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js', true);
 }
 add_action( 'wp_footer', 'GoogleSearch_scripts' ); // Write our JS below here
 
+//Add Scripts to the head
 function headScripts(){
 	wp_enqueue_script('axios', plugin_dir_url( __FILE__ ) . 'node_modules/axios/dist/axios.min.js', false);
 	wp_enqueue_script('xml2json', 'https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js', false);
+	wp_enqueue_script('modernizr', 'https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js', false);
 	wp_enqueue_style('styles', plugin_dir_url( __FILE__ ) . 'assets/css/styles.css', false);
 	wp_enqueue_style('modal', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css', false);
 }
@@ -36,8 +39,6 @@ function searchForm_load_widget() {
 }
 add_action( 'widgets_init', 'searchForm_load_widget' );
  
-
-
 class searchForm_widget extends WP_Widget {
 	// class constructor
 	
@@ -63,6 +64,7 @@ class searchForm_widget extends WP_Widget {
 		// This is where you run the code and display the output
 		// echo __( 'Hello, World!', 'tl_widget_domain' );
 		?>
+		<div id="loader"></div>
 		<div class="hold-form-and-info" div="hold-form-and-info">
 			<?php 
 				echo $args['before_widget'];
@@ -78,14 +80,14 @@ class searchForm_widget extends WP_Widget {
 			</form>
 		</div>
 		<div class="modal-bg">
-			<div class="modal">
-				<div id="display_info"></div>  
+			<div class="hold-modal">
+				<div class="modal">
+					<div id="display_info"></div>  
+				</div>
 			</div>
 		</div>
 		<?php 
 		
-
-
 		echo $args['after_widget'];
 	}
 
@@ -114,5 +116,12 @@ class searchForm_widget extends WP_Widget {
 	}
 }
 
+function register_searchFormShortcode(){
+	add_shortcode('google_rss_news', 'searchForm_widget');
+ }
+
+ add_action( 'init', 'register_searchFormShortcode');
+
+ add_filter('widget_text', 'do_shortcode');
 
 ?>
